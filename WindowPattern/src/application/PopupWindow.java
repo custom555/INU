@@ -30,6 +30,7 @@ public class PopupWindow {
 	private static Button retryBtn = new Button("Ponów");
 	private static Button ignoreBtn = new Button("Ignoruj");
 	private static Button okBtn = new Button("Ok");
+	private static Button okPlainBtn = new Button("Ok");
 	private static Button yesBtn = new Button("Tak");
 	private static Button noBtn = new Button("Nie");
 	private static Button cancelBtn = new Button("Anuluj");
@@ -128,7 +129,7 @@ public class PopupWindow {
 				pButtonBox.getChildren().addAll(okBtn);
 				break;
 			case OK_CANCEL:
-				pButtonBox.getChildren().addAll(okBtn, cancelBtn);
+				pButtonBox.getChildren().addAll(okPlainBtn, cancelBtn);
 				break;
 			case YES_NO:
 				pButtonBox.getChildren().addAll(yesBtn,noBtn);
@@ -143,6 +144,7 @@ public class PopupWindow {
 		retryBtn.setOnAction(e -> {result = MessageBoxResult.RETRY; popupStage.close();});
 		ignoreBtn.setOnAction(e -> {result = MessageBoxResult.IGNORE; popupStage.close();});
 		okBtn.setOnAction(e -> {result = MessageBoxResult.OK; popupStage.close();});
+		okPlainBtn.setOnAction(e -> {result = MessageBoxResult.OK; popupStage.close();});
 		yesBtn.setOnAction(e -> {result = MessageBoxResult.YES; popupStage.close();});
 		noBtn.setOnAction(e -> {result = MessageBoxResult.NO; popupStage.close();});
 		cancelBtn.setOnAction(e -> {result = MessageBoxResult.CANCEL; popupStage.close();});
@@ -154,6 +156,7 @@ public class PopupWindow {
 		okBtn.setPrefSize(120, 40);
 		cancelBtn.setPrefSize(120, 40);
 		okBtn.setPrefSize(120, 40);
+		okPlainBtn.setPrefSize(120, 40);
 		yesBtn.setPrefSize(120, 40);
 		noBtn.setPrefSize(120, 40);
 		cancelBtn.setPrefSize(120, 40);
