@@ -14,38 +14,32 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import toolkit.*;
 
 public class PopupWindow {
 
-	public enum MessageBoxIcon {INFORMATION, WARNING, ALERT, CRITICAL_ERROR, CONFIRM};
-	public enum MessageBoxButton {ABORT_RETRY_IGNORE, OK, OK_CANCEL, RETRY_CANCEL, YES_NO};
-	public enum MessageBoxResult{ABORT, RETRY, IGNORE, OK, CANCEL, YES, NO};
-	public static MessageBoxResult result = MessageBoxResult.CANCEL;
 	
 	private static Stage popupStage;
 	private static HBox pButtonBox;
 	private static Image image;
+	static MessageBoxResult result;
 	
-	private static Button abortBtn = new Button("Przerwij");
-	private static Button retryBtn = new Button("Ponów");
-	private static Button ignoreBtn = new Button("Ignoruj");
-	private static Button okBtn = new Button("Ok");
-	private static Button okPlainBtn = new Button("Ok");
-	private static Button yesBtn = new Button("Tak");
-	private static Button noBtn = new Button("Nie");
-	private static Button cancelBtn = new Button("Anuluj");
+	private static Button abortBtn;
+	private static Button retryBtn;
+	private static Button ignoreBtn;
+	private static Button okBtn;
+	private static Button okPlainBtn;
+	private static Button yesBtn;
+	private static Button noBtn;
+	private static Button cancelBtn;
 	
-	public static MessageBoxResult show(String title, String message, MessageBoxIcon icon, MessageBoxButton buttons) {
-		
+	public static MessageBoxResult show(String title, String message, MessageBoxIcon icon, MessageBoxButtons buttons) {
+
 		Text labelTxt = new Text();
 		labelTxt.setText(message);
 		labelTxt.setWrappingWidth(575);;
 		
 		setLabelFont(icon,labelTxt);	
-		adjustButtonsSize();
-		adjustButtonsDefaultOperations();
-		setButtonsListeners();
-		setButtonsIcons();
 		
 		popupStage = new Stage();
 		popupStage.setTitle(title);
@@ -75,6 +69,7 @@ public class PopupWindow {
 		
 		popupStage.setScene(pScene);
 		popupStage.setResizable(false);
+		result = MessageBoxResult.getResult("");
 		popupStage.showAndWait();
 		
 		return result;
@@ -83,29 +78,29 @@ public class PopupWindow {
 	private static void getIcon(MessageBoxIcon icon) {
 		switch (icon) {
 		case INFORMATION:
-			image = new Image(ClassLoader.getSystemResourceAsStream("StatusInformation_64x.png"));
+			image = new Image(ClassLoader.getSystemResourceAsStream(MessageBoxIcon.INFORMATION.toString()));
 			break;
 		case WARNING:
-			image = new Image(ClassLoader.getSystemResourceAsStream("StatusWarning_64x.png"));
+			image = new Image(ClassLoader.getSystemResourceAsStream(MessageBoxIcon.WARNING.toString()));
 			break;
 		case ALERT:
-			image = new Image(ClassLoader.getSystemResourceAsStream("StatusAlert_64x.png"));
+			image = new Image(ClassLoader.getSystemResourceAsStream(MessageBoxIcon.ALERT.toString()));
 			break;
 		case CRITICAL_ERROR:
-			image = new Image(ClassLoader.getSystemResourceAsStream("StatusCriticalError_64x.png"));
+			image = new Image(ClassLoader.getSystemResourceAsStream(MessageBoxIcon.CRITICAL_ERROR.toString()));
 			break;
 		case CONFIRM:
-			image = new Image(ClassLoader.getSystemResourceAsStream("StatusHelp_64x.png"));
+			image = new Image(ClassLoader.getSystemResourceAsStream(MessageBoxIcon.CONFIRM.toString()));
 			break;
 		}
 	}
 	private static void setLabelFont(MessageBoxIcon messageType, Text message) {
 		switch (messageType) {
 		case INFORMATION:
-			message.setFont(Font.font("Arial",FontWeight.NORMAL,19));
+			message.setFont(Font.font("Arial",FontWeight.NORMAL,16));
 			break;
 		case WARNING:
-			message.setFont(Font.font("Times New Roman",FontWeight.BOLD,18));
+			message.setFont(Font.font("Times New Roman",FontWeight.BOLD,15));
 			break;
 		case ALERT:
 			message.setFont(Font.font("Tahoma",FontWeight.LIGHT,17));
@@ -119,63 +114,78 @@ public class PopupWindow {
 		}
 	}
 
-	private static void getButtons(MessageBoxButton buttons) {
+	private static void getButtons(MessageBoxButtons buttons) {
 		
 		switch(buttons) {
 			case ABORT_RETRY_IGNORE:
-				pButtonBox.getChildren().addAll(abortBtn,retryBtn,ignoreBtn);
+				abortBtn = new Button(buttons.getText(0));
+				retryBtn = new Button(buttons.getText(1));
+				ignoreBtn = new Button(buttons.getText(2));
+				addAndSetButton(abortBtn,retryBtn,ignoreBtn);
 				break;
 			case OK:
-				pButtonBox.getChildren().addAll(okBtn);
+				okBtn = new Button(buttons.getText(0));
+				addAndSetButton(okBtn);
 				break;
 			case OK_CANCEL:
-				pButtonBox.getChildren().addAll(okPlainBtn, cancelBtn);
+				okPlainBtn = new Button(buttons.getText(0));
+				cancelBtn = new Button(buttons.getText(1));
+				addAndSetButton(okPlainBtn,cancelBtn);
 				break;
 			case YES_NO:
-				pButtonBox.getChildren().addAll(yesBtn,noBtn);
+				yesBtn = new Button(buttons.getText(0));
+				noBtn = new Button(buttons.getText(1));
+				addAndSetButton(yesBtn,noBtn);
 				break;
 			case RETRY_CANCEL:
-				pButtonBox.getChildren().addAll(retryBtn,cancelBtn);
+				retryBtn = new Button(buttons.getText(0));
+				cancelBtn = new Button(buttons.getText(1));
+				addAndSetButton(retryBtn,cancelBtn);
 				break;
 		}
 	}
-	private static void setButtonsListeners() {
-		abortBtn.setOnAction(e -> {result = MessageBoxResult.ABORT; popupStage.close();});
-		retryBtn.setOnAction(e -> {result = MessageBoxResult.RETRY; popupStage.close();});
-		ignoreBtn.setOnAction(e -> {result = MessageBoxResult.IGNORE; popupStage.close();});
-		okBtn.setOnAction(e -> {result = MessageBoxResult.OK; popupStage.close();});
-		okPlainBtn.setOnAction(e -> {result = MessageBoxResult.OK; popupStage.close();});
-		yesBtn.setOnAction(e -> {result = MessageBoxResult.YES; popupStage.close();});
-		noBtn.setOnAction(e -> {result = MessageBoxResult.NO; popupStage.close();});
-		cancelBtn.setOnAction(e -> {result = MessageBoxResult.CANCEL; popupStage.close();});
+	private static void setButtonListener(Button b) {
+		b.setOnAction(e -> {result = MessageBoxResult.getResult(b.getText()); popupStage.close();});
 	}
-	private static void adjustButtonsSize() {
-		abortBtn.setPrefSize(120, 40);
-		retryBtn.setPrefSize(120, 40);
-		ignoreBtn.setPrefSize(120, 40);
-		okBtn.setPrefSize(120, 40);
-		cancelBtn.setPrefSize(120, 40);
-		okBtn.setPrefSize(120, 40);
-		okPlainBtn.setPrefSize(120, 40);
-		yesBtn.setPrefSize(120, 40);
-		noBtn.setPrefSize(120, 40);
-		cancelBtn.setPrefSize(120, 40);
+	private static void adjustButtonSize(Button b) {
+		b.setPrefSize(120, 40);
 	}
-	private static void setButtonsIcons() {
+	private static void setButtonIcon(Button b) {
 		Image yesImage = new Image(ClassLoader.getSystemResourceAsStream("StatusOK_32x.png"));
 		Image noImage = new Image(ClassLoader.getSystemResourceAsStream("StatusNo_32xLG.png"));
 		
-		okBtn.setGraphic(new ImageView(yesImage));
-		okBtn.setGraphicTextGap(10);
-		yesBtn.setGraphic(new ImageView(yesImage));
-		yesBtn.setGraphicTextGap(10);
-		noBtn.setGraphic(new ImageView(noImage));
-		noBtn.setGraphicTextGap(10);
+		if(b.equals(okBtn)) {
+			okBtn.setGraphic(new ImageView(yesImage));
+			okBtn.setGraphicTextGap(10);
+		}
+		else if(b.equals(yesBtn)) {
+			yesBtn.setGraphic(new ImageView(yesImage));
+			yesBtn.setGraphicTextGap(10);
+		}
+		else if(b.equals(noBtn)) {
+			noBtn.setGraphic(new ImageView(noImage));
+			noBtn.setGraphicTextGap(10);
+		}
 	}
-	private static void adjustButtonsDefaultOperations(){
-		okBtn.setDefaultButton(true);
-		yesBtn.setDefaultButton(true);
-		cancelBtn.setCancelButton(true);
+	private static void adjustButtonDefaultOperation(Button b){
+		if(b.equals(okBtn)) {
+			okBtn.setDefaultButton(true);
+		}
+		else if(b.equals(yesBtn)) {
+			yesBtn.setDefaultButton(true);
+		}
+		else if(b.equals(cancelBtn)) {
+			cancelBtn.setCancelButton(true);
+		}	
+	}
+	private static void addAndSetButton(Button... b) {
+		for(int i=0; i<b.length; i++) {
+			setButtonIcon(b[i]);
+			setButtonListener(b[i]);
+			adjustButtonDefaultOperation(b[i]);
+			adjustButtonSize(b[i]);
+		}
+		pButtonBox.getChildren().addAll(b);
 	}
 }
 

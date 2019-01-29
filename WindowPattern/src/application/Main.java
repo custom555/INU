@@ -1,7 +1,5 @@
 package application;
 
-import application.PopupWindow.MessageBoxButton;
-import application.PopupWindow.MessageBoxIcon;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import toolkit.*;
 
 public class Main extends Application {
 	String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam arcu nibh, tincidunt quis mollis non,"
@@ -28,23 +27,23 @@ public class Main extends Application {
 			
 	
 			informationBtn.setOnAction(e -> {
-				PopupWindow.show("Okienko informacyjne",loremIpsum,MessageBoxIcon.INFORMATION,MessageBoxButton.OK);
+				PopupWindow.show("Okienko informacyjne",loremIpsum,MessageBoxIcon.INFORMATION,MessageBoxButtons.OK);
 				label.setText(PopupWindow.result.toString());
 			});
 			errorBtn.setOnAction(e -> {
-				PopupWindow.show("Okienko B³êdu",loremIpsum,MessageBoxIcon.CRITICAL_ERROR,MessageBoxButton.ABORT_RETRY_IGNORE);
+				PopupWindow.show("Okienko B³êdu",loremIpsum,MessageBoxIcon.CRITICAL_ERROR,MessageBoxButtons.ABORT_RETRY_IGNORE);
 				label.setText(PopupWindow.result.toString());
 			});
 			warningBtn.setOnAction(e -> {
-				PopupWindow.show("Okienko Ostrze¿enia",loremIpsum,MessageBoxIcon.WARNING,MessageBoxButton.OK_CANCEL);
+				PopupWindow.show("Okienko Ostrze¿enia",loremIpsum,MessageBoxIcon.WARNING,MessageBoxButtons.OK_CANCEL);
 				label.setText(PopupWindow.result.toString());
 			});
 			alertBtn.setOnAction(e -> {
-				PopupWindow.show("Okienko Alert",loremIpsum,MessageBoxIcon.ALERT,MessageBoxButton.RETRY_CANCEL);
+				PopupWindow.show("Okienko Alert",loremIpsum,MessageBoxIcon.ALERT,MessageBoxButtons.RETRY_CANCEL);
 				label.setText(PopupWindow.result.toString());
 			});
 			confirmBtn.setOnAction(e -> {
-				PopupWindow.show("Okienko Potwierdzenia",loremIpsum,MessageBoxIcon.CONFIRM,MessageBoxButton.YES_NO);
+				PopupWindow.show("Okienko Potwierdzenia",loremIpsum,MessageBoxIcon.CONFIRM,MessageBoxButtons.YES_NO);
 				label.setText(PopupWindow.result.toString());
 			});
 			
